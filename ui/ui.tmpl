@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="theme-color" content="#f4ecd8">
+    <meta name="msapplication-navbutton-color" content="#f4ecd8">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="manifest" href='data:application/manifest+json,{"name":"{{.Title}}","short_name":"{{.Title}}","description":"  ","icons":[{"src":"data:image/svg+xml;base64,favicon_will_be_here","sizes":"150x150","type":"image/svg+xml"}],"background":"rgb(244,236,216)","theme_color":"rgb(244,236,216)","display":"standalone"}' />
+
+    <title>{{.Title}}</title>
+    <link href="data:image/svg+xml;base64,favicon_will_be_here" rel="icon" type="image/svg+xml" />
+    <script>
+        (function () {
+            var t = null
+            try { t = localStorage.getItem('gossa-theme-v2') } catch (e) {}
+            document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light')
+        })()
+    </script>
+    <style type="text/css">css_will_be_here</style>
+    <script>
+        window.ro = {{.Ro}}
+        window.extraPath = {{.ExtraPath}}.slice(0, -1)
+        window.onload = function () { js_will_be_here }
+    </script>
+</head>
+
+<body>
+    <div onclick="window.helpOff()" style="display: none;" id="help"><table id="helpTable">
+        <caption>Shortcuts</caption>
+        <tbody>
+        <tr><td>Arrows / Enter</td><td>browse files, folders and pictures</td></tr>
+        <tr><td>Ctrl/Meta + Enter</td><td>download selected item as archive</td></tr>
+        <tr><td>Ctrl/Meta + C</td><td>copy URL to clipboard</td></tr>
+        <tr><td>Ctrl/Meta + E</td><td>rename item</td></tr>
+        <tr><td>Ctrl/Meta + Backspace</td><td>delete item</td></tr>
+        <tr><td>Ctrl/Meta/Shift + U</td><td>upload new file/folder</td></tr>
+        <tr><td>Ctrl/Meta + M</td><td>create a new directory</td></tr>
+        <tr><td>Ctrl/Meta + X</td><td>cut selected path</td></tr>
+        <tr><td>Ctrl/Meta + V</td><td>paste previously selected paths to directory</td></tr>
+        <tr><td>Ctrl/Meta + Z</td><td>copy checksums of selected file</td></tr>
+        <tr><td>Ctrl + click</td><td>download selected item as archive</td></tr>
+        <tr><td>click file icon</td><td>rename item</td></tr>
+        <tr><td>double click file icon</td><td>delete item</td></tr>
+        <tr><td>drag-and-drop item on UI</td><td>move item</td></tr>
+        <tr><td>drag-and-drop external item</td><td>upload files/folders</td></tr>
+        <tr><td>any other letter</td><td>fuzzy search</td></tr>
+    </tbody></table></div>
+
+    <div onclick="window.sumsOff()" style="display: none;" id="sums"><table id="sumsTable">
+        <caption>Checksum</caption>
+        <tbody>
+        <tr><td>Key</td><td>Hash Algorithm</td></tr>
+        <tr><td>1</td><td>copy sha1 sum</td></tr>
+        <tr><td>2</td><td>copy sha256 sum</td></tr>
+        <tr><td>3</td><td>copy sha512 sum</td></tr>
+        <tr><td>5</td><td>copy md5 sum</td></tr>
+    </tbody></table></div>
+
+    <div style="display: none;" onclick="window.quitAll()" id="quitAll" title="Close (Esc)"><i style="display: none;" id="toast">can't reach server</i></div>
+    <textarea style="display: none;" id="text-editor" spellcheck="false"></textarea>
+    <div id="drop-grid"></div>
+    <input type="file" id="clickupload" multiple style="display:none"/>
+
+    <header class="top">
+        <h1 onclick="return titleClick(event)">.{{.Title}}</h1>
+        <div id="icHolder">
+            {{if not .Ro}}
+                <div onclick="document.getElementById('clickupload').click()" class="ic icon-large-upload manualUp" title="Upload"></div>
+                <div onclick="window.displayPad()" class="ic icon-large-pad" title="New text file"></div>
+                <div onclick="window.mkdirBtn()" class="ic icon-large-folder" title="New folder"></div>
+            {{end}}
+            <div onclick="window.toggleTheme()" class="ic ic-theme" title="Light / dark"></div>
+        </div>
+    </header>
+
+    <div id="pics" style="display:none;"> <img draggable="false" onclick="window.picsNav()" id="picsHolder" /></div>
+    <div id="video" style="display:none;">
+        <div onclick="window.videodl()" class="icon-dl" id="video-dl" title="Download"></div>
+        <video controls id="videoHolder"> </video>
+    </div>
+    <div id="pdf" style="display:none;"> </div>
+
+    <table id="linkTable">
+    <tbody>
+{{.Rows}}    </tbody>
+    </table>
+    <div id="empty">Empty folder</div>
+    <p id="help_message">Ctrl + H for shortcuts</p>
+
+    <div id="upBar" class="bar">
+        <span style="display: none;" class="barName" id="upBarName"></span>
+        <div style="display: none;" class="barPc" id="upBarPc">1%</div>
+    </div>
+    <div id="ok" class="notif icon-large-ok"></div>
+    <div id="sad" class="notif icon-large-sad-server"></div>
+</body>
+</html>
